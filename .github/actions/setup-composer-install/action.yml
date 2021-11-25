@@ -1,0 +1,30 @@
+name: Setup Composer & Install
+author: Project Cosmic Limited
+description: Sets up composer and runs `composer install`
+
+inputs:
+  php_version:
+    description: Major (and optional minor) version number of PHP to use
+    default: '7.4'
+    required: false
+  cache_key_prefix:
+    description: Install cache prefix key
+    default: v1
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Set up
+      id: setup
+      run: |
+        sudo update-alternatives --set php /usr/bin/php${{ inputs.php_version }}
+        echo "::set-output name=dir::$(php composer config cache-dir)"
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ${{ steps.setup.outputs.dir }}
+          vendor
+        key: ${{ inputs.cache_key_prefix }}-composer-${{ hashFiles('composer.lock') }}
+        restore-keys: ${{ inputs.cache_key_prefix }}-composer-
+    - run: composer install --no-progress
