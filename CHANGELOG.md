@@ -6,11 +6,13 @@ The format is based on [Keep a Changelog][keepachangelog] and this project
 adheres to [Semantic Versioning][semver].
 
 ## [Unreleased]
+### Changed
+- Fix name of Drupal workflow in Changelog
 
 ## [1.0.0] - 2021-11-26
 ### Added
 - Add Composer setup and install composite action
-- Add Drupal Theme CI/CD reusable workflow
+- Add Drupal CI/CD reusable workflow
 - Add WordPress Theme CI/CD reusable workflow
 
 [Unreleased]: https://github.com/projectcosmic/gh-actions/compare/v1.0.0...HEAD
