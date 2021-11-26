@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-18.04
     # Run job on human-initiated events or dependabot npm pull requests.
     if: |
-      input.assets
+      inputs.assets
       && (!endsWith(github.actor, '[bot]') || startsWith(github.head_ref, 'dependabot/npm_and_yarn/'))
       && !contains(github.event.head_commit.message, '[skip assets]')
     steps:
@@ -70,8 +70,8 @@ jobs:
           cache: npm
       - run: npm install
       - name: Run lint
-        if: input.assets_lint
-        run: ${{ input.assets_lint }}
+        run: ${{ inputs.assets_lint }}
+        if: inputs.assets_lint
       - run: npm run build
       - uses: actions/upload-artifact@v2
         if: github.ref == format('refs/heads/{0}', inputs.deploy_branch) && inputs.deploy_target
