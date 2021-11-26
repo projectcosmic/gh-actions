@@ -20,6 +20,7 @@ runs:
       run: |
         sudo update-alternatives --set php /usr/bin/php${{ inputs.php_version }}
         echo "::set-output name=dir::$(php composer config cache-dir)"
+      shell: bash
     - uses: actions/cache@v2
       with:
         path: |
@@ -28,3 +29,4 @@ runs:
         key: ${{ inputs.cache_key_prefix }}-composer-${{ hashFiles('composer.lock') }}
         restore-keys: ${{ inputs.cache_key_prefix }}-composer-
     - run: composer install --no-progress
+      shell: bash
