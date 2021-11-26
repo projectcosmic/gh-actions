@@ -47,7 +47,7 @@ jobs:
     if: '!endsWith(github.actor, ''[bot]'') && !contains(github.event.head_commit.message, ''[skip tests]'')'
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/actions/setup-composer-install
+      - uses: projectcosmic/gh-actions/.github/actions/setup-composer-install@main
         with:
           cache_key_prefix: ${{ inputs.composer_cache_key_prefix }}
           php_version: ${{ inputs.php_version }}
