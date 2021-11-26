@@ -34,7 +34,7 @@ on:
         required: false
       php_version:
         type: number
-        descripton: Major (and optional minor) version number of PHP to use
+        description: Major (and optional minor) version number of PHP to use
         default: 7.4
         required: false
 
