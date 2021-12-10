@@ -6,8 +6,9 @@ The format is based on [Keep a Changelog][keepachangelog] and this project
 adheres to [Semantic Versioning][semver].
 
 ## [Unreleased]
-### Changed
+### Fixed
 - Fix name of Drupal workflow in Changelog
+- Fix deployments not pushing `input.deploy_branch`
 
 ## [1.0.0] - 2021-11-26
 ### Added

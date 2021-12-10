@@ -192,5 +192,5 @@ jobs:
       - name: Deploy checked-in code
         # @todo support multisite installs.
         run: |
-          git push `./vendor/bin/drush site:alias --format=json | jq 'to_entries[0].value | .user + "@" + .host + ":" + .root | sub("/public_html/?$"; "/site.git")' --raw-output` main --force
+          git push `./vendor/bin/drush site:alias --format=json | jq 'to_entries[0].value | .user + "@" + .host + ":" + .root | sub("/public_html/?$"; "/site.git")' --raw-output` ${{ inputs.deploy_branch }} --force
           ./vendor/bin/drush @live deploy

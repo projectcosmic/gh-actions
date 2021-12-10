@@ -111,4 +111,4 @@ jobs:
             --delete \
             --prune-empty-dirs \
             --recursive
-      - run: git push ${{ inputs.deploy_target }}:theme.git main --force
+      - run: git push ${{ inputs.deploy_target }}:theme.git ${{ inputs.deploy_branch }} --force
