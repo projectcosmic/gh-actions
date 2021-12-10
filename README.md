@@ -24,7 +24,8 @@ the root. This must also have a [`volta.node`][volta] present for the workflow
 to set up the correct [`node`][nodejs] version.
 
 When deploying, the workflow assumes the theme folder in production is
-`<with.deploy_folder>/wp-content/themes/<github_repository_name>`.
+`/wp-content/themes/<github_repository_name>`. The deploy target is parsed from
+the `@live` [wp-cli site alias][wp-cli-alias].
 
 ### [Drupal CI/CD](.github/workflows/drupal-ci-cd.yml)
 
@@ -57,3 +58,4 @@ The workflow uses the SSH connection details defined by the `@live`
 [nodejs]: https://nodejs.org/
 [volta]: https://volta.sh/
 [wordpress]: https://wordpress.org/
+[wp-cli-alias]: https://make.wordpress.org/cli/handbook/guides/running-commands-remotely/#aliases

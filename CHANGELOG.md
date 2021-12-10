@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog][keepachangelog] and this project
 adheres to [Semantic Versioning][semver].
 
 ## [Unreleased]
+### Changed
+- Parse WordPress theme deployment target info from wp-cli @live alias
 
 ## [1.0.1] - 2021-12-10
 ### Fixed
