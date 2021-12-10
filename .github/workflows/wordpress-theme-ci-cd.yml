@@ -20,17 +20,8 @@ on:
         required: false
       deploy_branch:
         type: string
-        description: Name of the branch where deployments should happen
+        description: Name of the branch where deployments should happen or empty string to disable deployments
         default: main
-        required: false
-      deploy_folder:
-        type: string
-        description: Remote WordPress root folder
-        default: public_html
-        required: false
-      deploy_target:
-        type: string
-        description: The SSH target for deployment in the form `user@server.com` or empty string to disable deployments
         required: false
       php_version:
         type: number
@@ -74,7 +65,7 @@ jobs:
         if: inputs.assets_lint
       - run: npm run build
       - uses: actions/upload-artifact@v2
-        if: github.ref == format('refs/heads/{0}', inputs.deploy_branch) && inputs.deploy_target
+        if: github.ref == format('refs/heads/{0}', inputs.deploy_branch)
         with:
           name: assets
           path: dist
@@ -88,7 +79,6 @@ jobs:
     # cancellations.
     if: |
       github.ref == format('refs/heads/{0}', inputs.deploy_branch)
-      && inputs.deploy_target
       && !cancelled()
       && needs.php_codesniffer.result != 'failure'
       && needs.assets.result != 'failure'
@@ -96,6 +86,14 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Parse Deploy Target Information
+        id: target
+        run: |
+          if alias=`wp cli alias get @live 2>/dev/null`
+          then
+            echo "::set-output name=address::$(echo "$alias" | sed --regexp-extended --null-data 's/^.*\n?ssh:\s+([^\n]+)\n?.*/\1/')"
+            echo "::set-output name=root::$(echo "$alias" | sed --regexp-extended --null-data 's/^.*\n?path:\s+([^\n]+)\n?.*/\1/')"
+          fi
       - uses: actions/download-artifact@v2
         if: needs.assets.result == 'success'
         with:
@@ -104,11 +102,11 @@ jobs:
       - name: Deploy assets
         if: needs.assets.result == 'success'
         run: |
-          rsync __gh-actions-assets__/ ${{ inputs.deploy_target }}:${{ inputs.deploy_folder }}/wp-content/themes/${{ github.event.repository.name }}/dist/ \
+          rsync __gh-actions-assets__/ ${{ steps.target.output.address }}:${{ steps.target.output.root }}/wp-content/themes/${{ github.event.repository.name }}/dist/ \
             --checksum \
             --chmod="Fgo-wx,Dgo-w" \
             --compress \
             --delete \
             --prune-empty-dirs \
             --recursive
-      - run: git push ${{ inputs.deploy_target }}:theme.git ${{ inputs.deploy_branch }} --force
+      - run: git push ${{ steps.target.output.address }}:theme.git ${{ inputs.deploy_branch }} --force
