@@ -25,7 +25,7 @@ adheres to [Semantic Versioning][semver].
 - Add Drupal CI/CD reusable workflow
 - Add WordPress Theme CI/CD reusable workflow
 
-[Unreleased]: https://github.com/projectcosmic/gh-actions/compare/v1.0.0...2.x
+[Unreleased]: https://github.com/projectcosmic/gh-actions/compare/v2.0.0...2.x
 [2.0.0]: https://github.com/projectcosmic/gh-actions/compare/v2.0.0...v1.0.1
 [1.0.1]: https://github.com/projectcosmic/gh-actions/compare/v1.0.1...v1.0.0
 [1.0.0]: https://github.com/projectcosmic/gh-actions/releases/tag/v1.0.0
