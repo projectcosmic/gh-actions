@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog][keepachangelog] and this project
 adheres to [Semantic Versioning][semver].
 
 ## [Unreleased]
+### Added
+- Add config updating for dependabot PRs
 
 ## [2.0.0] - 2021-12-11
 ### Changed
