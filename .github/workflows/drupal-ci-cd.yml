@@ -96,7 +96,7 @@ jobs:
   config_update:
     name: Update Configuration
     runs-on: ubuntu-18.04
-    if: github.event.pull_request.user.login == 'dependabot[bot]' && startsWith(github.head_ref, 'dependabot/composer/')
+    if: github.actor == 'dependabot[bot]' && startsWith(github.head_ref, 'dependabot/composer/')
     permissions:
       contents: write
     steps:
