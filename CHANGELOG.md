@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog][keepachangelog] and this project
 adheres to [Semantic Versioning][semver].
 
 ## [Unreleased]
+
+## [2.1.0] - 2021-12-17
 ### Added
 - Add config updating for dependabot PRs
 
@@ -27,9 +29,10 @@ adheres to [Semantic Versioning][semver].
 - Add Drupal CI/CD reusable workflow
 - Add WordPress Theme CI/CD reusable workflow
 
-[Unreleased]: https://github.com/projectcosmic/gh-actions/compare/v2.0.0...2.x
-[2.0.0]: https://github.com/projectcosmic/gh-actions/compare/v2.0.0...v1.0.1
-[1.0.1]: https://github.com/projectcosmic/gh-actions/compare/v1.0.1...v1.0.0
+[Unreleased]: https://github.com/projectcosmic/gh-actions/compare/v2.1.0...2.x
+[2.1.0]: https://github.com/projectcosmic/gh-actions/compare/v2.0.0...v2.1.0
+[2.0.0]: https://github.com/projectcosmic/gh-actions/compare/v1.0.1...v2.0.0
+[1.0.1]: https://github.com/projectcosmic/gh-actions/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/projectcosmic/gh-actions/releases/tag/v1.0.0
 [keepachangelog]: https://keepachangelog.com/
 [semver]: https://semver.org/spec/v2.0.0.html
