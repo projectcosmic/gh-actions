@@ -54,11 +54,11 @@ jobs:
   phpunit:
     name: PHPUnit Tests
     runs-on: ubuntu-18.04
-    # Run job on human-initiated event or dependabot composer pull requests and
-    # where the latest commit has not indicated to skip tests.
+    # Run job on human-initiated event or dependabot composer pull request
+    # branch pushes and where the latest commit has not indicated to skip tests.
     if: |
       inputs.phpunit != ''
-      && (!endsWith(github.actor, '[bot]') || startsWith(github.head_ref, 'dependabot/composer/'))
+      && (!endsWith(github.actor, '[bot]') || startsWith(github.ref, 'refs/heads/dependabot/composer/'))
       && !contains(github.event.head_commit.message, '[skip tests]')
     strategy:
       fail-fast: false
@@ -143,10 +143,11 @@ jobs:
   assets:
     name: Build Assets
     runs-on: ubuntu-18.04
-    # Run job on human-initiated events or dependabot npm pull requests.
+    # Run job on human-initiated events or dependabot npm pull request branch
+    # pushes.
     if: |
       inputs.assets
-      && (!endsWith(github.actor, '[bot]') || startsWith(github.head_ref, 'dependabot/npm_and_yarn/'))
+      && (!endsWith(github.actor, '[bot]') || startsWith(github.ref, 'refs/heads/dependabot/npm_and_yarn/'))
       && !contains(github.event.head_commit.message, '[skip assets]')
     steps:
       - uses: actions/checkout@v2
