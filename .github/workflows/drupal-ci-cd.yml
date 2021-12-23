@@ -41,7 +41,7 @@ jobs:
   head_commit:
     name: 'Get HEAD Commit'
     runs-on: ubuntu-18.04
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && !endsWith(github.actor, '[bot]')
     outputs:
       message: ${{ steps.data.outputs.message }}
     steps:

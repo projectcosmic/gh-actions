@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog][keepachangelog] and this project
 adheres to [Semantic Versioning][semver].
 
 ## [Unreleased]
+### Changed
+- Optimize PR HEAD commit fetch for human commits only
+
 ### Fixed
 - Fix `[skip *]` tags not working in PRs
 
