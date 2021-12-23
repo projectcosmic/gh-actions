@@ -38,12 +38,36 @@ permissions:
   contents: read
 
 jobs:
+  head_commit:
+    name: 'Get HEAD Commit'
+    runs-on: ubuntu-18.04
+    if: github.event_name == 'pull_request'
+    outputs:
+      message: ${{ steps.data.outputs.message }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Extract HEAD commit data
+        id: data
+        run: |
+          message="$(git log -1 --pretty=%B)"
+          message="${message//'%'/'%25'}"
+          message="${message//$'\n'/'%0A'}"
+          message="${message//$'\r'/'%0D'}"
+          echo "::set-output name=message::$message"
   php_codesniffer:
     name: PHP Coding Standards
     runs-on: ubuntu-18.04
+    needs: head_commit
     # Skip code style check with [skip tests] in latest commit message and also
     # for bot actions.
-    if: '!endsWith(github.actor, ''[bot]'') && !contains(github.event.head_commit.message, ''[skip tests]'')'
+    if: |
+      !endsWith(github.actor, '[bot]')
+      && !contains(github.event.head_commit.message, '[skip tests]')
+      && !cancelled()
+      && needs.head_commit.result != 'failure'
+      && !contains(needs.head_commit.outputs.message, '[skip tests]')
     steps:
       - uses: actions/checkout@v2
       - uses: projectcosmic/gh-actions/.github/actions/setup-composer-install@2.x
@@ -54,12 +78,16 @@ jobs:
   phpunit:
     name: PHPUnit Tests
     runs-on: ubuntu-18.04
+    needs: head_commit
     # Run job on human-initiated event or dependabot composer pull requests and
     # where the latest commit has not indicated to skip tests.
     if: |
       inputs.phpunit != ''
       && (!endsWith(github.actor, '[bot]') || startsWith(github.head_ref, 'dependabot/composer/'))
       && !contains(github.event.head_commit.message, '[skip tests]')
+      && !cancelled()
+      && needs.head_commit.result != 'failure'
+      && !contains(needs.head_commit.outputs.message, '[skip tests]')
     strategy:
       fail-fast: false
       matrix:
@@ -143,11 +171,15 @@ jobs:
   assets:
     name: Build Assets
     runs-on: ubuntu-18.04
+    needs: head_commit
     # Run job on human-initiated events or dependabot npm pull requests.
     if: |
       inputs.assets
       && (!endsWith(github.actor, '[bot]') || startsWith(github.head_ref, 'dependabot/npm_and_yarn/'))
       && !contains(github.event.head_commit.message, '[skip assets]')
+      && !cancelled()
+      && needs.head_commit.result != 'failure'
+      && !contains(needs.head_commit.outputs.message, '[skip assets]')
     steps:
       - uses: actions/checkout@v2
       - name: Set up

@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog][keepachangelog] and this project
 adheres to [Semantic Versioning][semver].
 
 ## [Unreleased]
+### Fixed
+- Fix `[skip *]` tags not working in PRs
 
 ## [2.1.1] - 2021-12-17
 ### Changed
