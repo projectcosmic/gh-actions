@@ -1,0 +1,67 @@
+name: Drupal Dependabot PR Config Update
+
+on:
+  workflow_call:
+    inputs:
+      composer_cache_key_prefix:
+        type: string
+        description: Cache key prefix for composer install
+        default: v1
+        required: false
+      php_version:
+        type: number
+        description: Major (and optional minor) version number of PHP to use
+        default: 7.4
+        required: false
+
+jobs:
+  config_update:
+    name: Update Configuration
+    runs-on: ubuntu-18.04
+    if: |
+      github.event_name == 'pull_request'
+      && github.actor == 'dependabot[bot]'
+      && startsWith(github.head_ref, 'dependabot/composer/')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+      - uses: projectcosmic/gh-actions/.github/actions/setup-composer-install@3.x
+        with:
+          cache_key_prefix: ${{ inputs.composer_cache_key_prefix }}
+          php_version: ${{ inputs.php_version }}
+      - name: Get base commit information
+        id: base
+        run: |
+          mv composer.lock composer.lock.base
+          echo "::set-output name=hash::${{ hashFiles('public_html/**/*.install', 'public_html/**/*.post_update.php') }}"
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          clean: false
+      - run: composer install --no-progress --no-dev
+      - name: Run updates
+        run: |
+          cp public_html/sites/default/default.settings.php public_html/sites/default/settings.php
+          echo '$settings["config_sync_directory"] = "../config/sync";' >> public_html/sites/default/settings.php
+          sudo systemctl start mysql.service
+          mysql -u root -proot -e 'create database db'
+          mv composer.lock composer.lock.pr
+          mv composer.lock.base composer.lock
+          composer install --no-progress --no-dev
+          ./vendor/bin/drush site:install \
+            $(sed --regexp-extended --null-data 's/.*(^|\n)profile:\s*['\''"]?(\w+).*/\2/' config/sync/core.extension.yml) \
+            --db-url=mysql://root:root@127.0.0.1/db \
+            --existing-config
+          sudo chmod u+w public_html/sites/default --recursive
+          mv composer.lock.pr composer.lock
+          composer install --no-progress --no-dev
+          ./vendor/bin/drush updatedb
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          ./vendor/bin/drush config:export --commit --message='Update config'
+          git push
+        if: hashFiles('public_html/**/*.install', 'public_html/**/*.post_update.php') != steps.base.outputs.hash

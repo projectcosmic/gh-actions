@@ -47,6 +47,11 @@ where `<type>` is the type declared in the JSON string of `with.php_unit`.
 The workflow uses the SSH connection details defined by the `@live`
 [Drush site alias][drush-alias] as the deploy target.
 
+### [Drupal Dependabot PR Config Update](.github/workflows/drupal-dependabot-config-update.yml)
+
+Runs any Drupal configuration updates for a dependabot update PR. Must have
+`contents: write` and be called on the `pull_request` event.
+
 [composer]: https://getcomposer.org/
 [drupal]: https://www.drupal.org/
 [drupal-recommended]: https://www.drupal.org/docs/develop/using-composer/starting-a-site-using-drupal-composer-project-templates#s-drupalrecommended-project

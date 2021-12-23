@@ -8,6 +8,7 @@ adheres to [Semantic Versioning][semver].
 ## [Unreleased]
 ### Changed
 - Adjust dependabot context check to push events
+- Separate Drupal dependabot config update job
 
 ## [2.1.1] - 2021-12-17
 ### Changed
