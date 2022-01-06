@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog][keepachangelog] and this project
 adheres to [Semantic Versioning][semver].
 
 ## [Unreleased]
+### Fixed
+- Fix config file deletions not committed
 
 ## [2.1.4] - 2022-01-06
 ### Fixed
