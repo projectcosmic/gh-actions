@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog][keepachangelog] and this project
 adheres to [Semantic Versioning][semver].
 
 ## [Unreleased]
+
+## [2.1.3] - 2022-01-06
 ### Fixed
 - Ensure final newline exists for exported config
 
@@ -42,7 +44,8 @@ adheres to [Semantic Versioning][semver].
 - Add Drupal CI/CD reusable workflow
 - Add WordPress Theme CI/CD reusable workflow
 
-[Unreleased]: https://github.com/projectcosmic/gh-actions/compare/v2.1.2...2.x
+[Unreleased]: https://github.com/projectcosmic/gh-actions/compare/v2.1.3...2.x
+[2.1.3]: https://github.com/projectcosmic/gh-actions/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/projectcosmic/gh-actions/compare/v2.1.1...v2.1.2
 [2.1.1]: https://github.com/projectcosmic/gh-actions/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/projectcosmic/gh-actions/compare/v2.0.0...v2.1.0
