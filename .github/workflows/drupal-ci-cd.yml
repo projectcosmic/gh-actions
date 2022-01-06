@@ -70,7 +70,7 @@ jobs:
       && !contains(needs.head_commit.outputs.message, '[skip tests]')
     steps:
       - uses: actions/checkout@v2
-      - uses: projectcosmic/gh-actions/.github/actions/setup-composer-install@v2.1.4
+      - uses: projectcosmic/gh-actions/.github/actions/setup-composer-install@2.x
         with:
           cache_key_prefix: ${{ inputs.composer_cache_key_prefix }}
           php_version: ${{ inputs.php_version }}
@@ -98,7 +98,7 @@ jobs:
       BROWSERTEST_OUTPUT_DIRECTORY: simpletest/browser_output
     steps:
       - uses: actions/checkout@v2
-      - uses: projectcosmic/gh-actions/.github/actions/setup-composer-install@v2.1.4
+      - uses: projectcosmic/gh-actions/.github/actions/setup-composer-install@2.x
         with:
           cache_key_prefix: ${{ inputs.composer_cache_key_prefix }}
           php_version: ${{ inputs.php_version }}
@@ -131,7 +131,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.base.sha }}
-      - uses: projectcosmic/gh-actions/.github/actions/setup-composer-install@v2.1.4
+      - uses: projectcosmic/gh-actions/.github/actions/setup-composer-install@2.x
         with:
           cache_key_prefix: ${{ inputs.composer_cache_key_prefix }}
           php_version: ${{ inputs.php_version }}
