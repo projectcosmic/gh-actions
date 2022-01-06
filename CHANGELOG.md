@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog][keepachangelog] and this project
 adheres to [Semantic Versioning][semver].
 
 ## [Unreleased]
+### Fixed
+- Fix error attempting to commit untracked config
 
 ## [2.1.3] - 2022-01-06
 ### Fixed
