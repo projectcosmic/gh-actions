@@ -163,10 +163,15 @@ jobs:
           mv composer.lock.pr composer.lock
           composer install --no-progress --no-dev
           ./vendor/bin/drush updatedb
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          ./vendor/bin/drush config:export --commit --message='Update config'
-          git push
+          ./vendor/bin/drush config:export
+          if ! git diff --quiet -- config || git ls-files --others --exclude-standard --error-unmatch config >/dev/null 2>&1
+          then
+            sed -i '$a\' config/*/*.yml
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git commit --message='Update config' config/*/*.yml
+            git push
+          fi
         if: hashFiles('public_html/**/*.install', 'public_html/**/*.post_update.php') != steps.base.outputs.hash
   assets:
     name: Build Assets

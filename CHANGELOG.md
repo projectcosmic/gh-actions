@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog][keepachangelog] and this project
 adheres to [Semantic Versioning][semver].
 
 ## [Unreleased]
+### Fixed
+- Ensure final newline exists for exported config
 
 ## [2.1.2] - 2021-12-24
 ### Changed
