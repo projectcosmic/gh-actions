@@ -148,6 +148,8 @@ jobs:
       - run: composer install --no-progress --no-dev
       - name: Run updates
         run: |
+          echo '${{ steps.base.outputs.hash }}'
+          echo '${{ hashFiles('public_html/**/*.install', 'public_html/**/*.post_update.php') }}'
           cp public_html/sites/default/default.settings.php public_html/sites/default/settings.php
           echo '$settings["config_sync_directory"] = "../config/sync";' >> public_html/sites/default/settings.php
           sudo systemctl start mysql.service
