@@ -138,6 +138,7 @@ jobs:
       - name: Get base commit information
         id: base
         run: |
+          composer install --no-progress --no-dev
           mv composer.lock composer.lock.base
           echo "::set-output name=hash::${{ hashFiles('public_html/**/*.install', 'public_html/**/*.post_update.php') }}"
       - uses: actions/checkout@v2
