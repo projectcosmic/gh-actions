@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog][keepachangelog] and this project
 adheres to [Semantic Versioning][semver].
 
 ## [Unreleased]
+### Added
+- Add Drupal extension continuous integration reusable workflow
 
 ## [2.1.6] - 2022-02-21
 ### Fixed

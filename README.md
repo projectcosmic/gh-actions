@@ -47,6 +47,13 @@ where `<type>` is the type declared in the JSON string of `with.php_unit`.
 The workflow uses the SSH connection details defined by the `@live`
 [Drush site alias][drush-alias] as the deploy target.
 
+### [Drupal Extension CI](.github/workflows/drupal-extension-ci.yml)
+
+Runs PHP coding standards checks and PHPUnit tests for an extension. The
+repository calling this reusable workflow is expected to have a root
+`composer.json` file with `name` and `type` keys. Additionally, the `type` key
+should be one of the `drupal-` values.
+
 [composer]: https://getcomposer.org/
 [drupal]: https://www.drupal.org/
 [drupal-recommended]: https://www.drupal.org/docs/develop/using-composer/starting-a-site-using-drupal-composer-project-templates#s-drupalrecommended-project

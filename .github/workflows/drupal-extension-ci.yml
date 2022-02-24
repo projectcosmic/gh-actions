@@ -1,0 +1,80 @@
+name: Drupal Extension CI
+
+on:
+  workflow_call:
+    inputs:
+      php_version:
+        type: number
+        description: Version number suffix of the /usr/bin/php binary to use
+        default: 7.4
+        required: false
+
+jobs:
+  php_codesniffer:
+    name: PHP Coding Standards
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up composer
+        id: setup
+        run: |
+          sudo update-alternatives --set php /usr/bin/php${{ inputs.php_version }}
+          echo "::set-output name=dir::$(php composer config cache-dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.setup.outputs.dir }}
+          key: v1-composer
+      - name: Run PHP_CodeSniffer
+        run: |
+          composer require drupal/coder --no-progress
+          ./vendor/bin/phpcs . \
+            --ignore=vendor/ \
+            --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml \
+            --standard=Drupal,DrupalPractice \
+            --runtime-set ignore_warnings_on_exit 1 \
+            --report-full
+  phpunit:
+    name: PHPUnit Tests
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Set up composer
+        id: setup
+        run: |
+          sudo update-alternatives --set php /usr/bin/php${{ inputs.php_version }}
+          echo "::set-output name=dir::$(php composer config cache-dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.setup.outputs.dir }}
+          key: v1-composer
+      - name: Set up Drupal core
+        run: |
+          composer create-project drupal/recommended-project . --no-progress
+          composer require drupal/core-dev --no-progress
+      - uses: actions/checkout@v2
+        with:
+          path: project
+      - name: Require project
+        run: |
+          jq '.repositories = [{ "type": "path", "url": "./project" }] + .repositories' composer.json --raw-output > new.composer.json
+          mv new.composer.json composer.json
+          composer require "$(jq '.name' project/composer.json --raw-output):dev-${{ github.ref_name }}"
+      - name: Run PHPUnit Tests
+        run: |
+          composer require --dev phpspec/prophecy-phpunit:^2
+          sudo systemctl start mysql.service
+          mysql -u root -proot -e 'create database tests'
+          cd web
+          php -S localhost:8888 .ht.router.php >& /dev/null &
+          mkdir -p sites/simpletest/browser_output
+          ../vendor/bin/phpunit \
+            --configuration core \
+            "$(jq '.type | ltrimstr("drupal-") + "s"' ../project/composer.json --raw-output)"/contrib/"$(jq '.name | split("/")[1]' ../project/composer.json --raw-output)"
+        env:
+          SIMPLETEST_DB: mysql://root:root@127.0.0.1/tests
+          SIMPLETEST_BASE_URL: http://localhost:8888
+          BROWSERTEST_OUTPUT_DIRECTORY: simpletest/browser_output
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: test-browser-output
+          path: web/sites/simpletest/browser_output
