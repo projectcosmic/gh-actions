@@ -7,6 +7,10 @@ adheres to [Semantic Versioning][semver].
 
 ## [Unreleased]
 
+## [2.2.1] - 2022-04-23
+### Fixed
+- Fix action version references
+
 ## [2.2.0] - 2022-02-28
 ### Added
 - Add Drupal extension continuous integration reusable workflow
