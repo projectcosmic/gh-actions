@@ -60,8 +60,9 @@ jobs:
     name: PHP Coding Standards
     runs-on: ubuntu-18.04
     needs: head_commit
-    # Skip code style check with [skip tests] in latest commit message and also
-    # for bot actions.
+    # Skip when:
+    # - triggered by a bot.
+    # - [skip tests] is in the latest commit message.
     if: |
       !endsWith(github.actor, '[bot]')
       && !contains(github.event.head_commit.message, '[skip tests]')
@@ -79,8 +80,10 @@ jobs:
     name: PHPUnit Tests
     runs-on: ubuntu-18.04
     needs: head_commit
-    # Run job on human-initiated event or dependabot composer pull requests and
-    # where the latest commit has not indicated to skip tests.
+    # Skip when:
+    # - PHPUnit workflow configuration is empty
+    # - triggered by a bot and not a composer dependabot pull request.
+    # - [skip tests] is in the latest commit message.
     if: |
       inputs.phpunit != ''
       && (!endsWith(github.actor, '[bot]') || startsWith(github.head_ref, 'dependabot/composer/'))
@@ -124,6 +127,7 @@ jobs:
   config_update:
     name: Update Configuration
     runs-on: ubuntu-18.04
+    # Run when triggered by a composer dependabot pull request event.
     if: github.actor == 'dependabot[bot]' && startsWith(github.head_ref, 'dependabot/composer/')
     permissions:
       contents: write
@@ -179,7 +183,10 @@ jobs:
     name: Build Assets
     runs-on: ubuntu-18.04
     needs: head_commit
-    # Run job on human-initiated events or dependabot npm pull requests.
+    # Skip when:
+    # - Asset build workflow configuration is false
+    # - triggered by a bot and not an NPM or Yarn dependabot pull request.
+    # - [skip assets] is in the latest commit message.
     if: |
       inputs.assets
       && (!endsWith(github.actor, '[bot]') || startsWith(github.head_ref, 'dependabot/npm_and_yarn/'))
@@ -232,8 +239,9 @@ jobs:
       - php_codesniffer
       - phpunit
       - assets
-    # Run job only on main branch, allowing skipped jobs but no failures or
-    # cancellations.
+    # Skip when:
+    # - the push event ref does not equal the deploy branch name.
+    # - any dependent job failed (allow skipping).
     if: |
       github.ref == format('refs/heads/{0}', inputs.deploy_branch)
       && !cancelled()
