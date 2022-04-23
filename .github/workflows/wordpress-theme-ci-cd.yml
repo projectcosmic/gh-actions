@@ -30,13 +30,43 @@ on:
         required: false
 
 jobs:
+  head_commit:
+    name: 'Get HEAD Commit'
+    runs-on: ubuntu-18.04
+    if: |
+      github.event_name == 'pull_request'
+      && !endsWith(github.actor, '[bot]')
+      && github.repository != github.event.pull_request.head.repo.full_name
+    outputs:
+      message: ${{ steps.data.outputs.message }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Extract HEAD commit data
+        id: data
+        run: |
+          message="$(git log -1 --pretty=%B)"
+          message="${message//'%'/'%25'}"
+          message="${message//$'\n'/'%0A'}"
+          message="${message//$'\r'/'%0D'}"
+          echo "::set-output name=message::$message"
   php_codesniffer:
     name: PHP Coding Standards
     runs-on: ubuntu-18.04
+    needs: head_commit
     # Skip when:
     # - triggered by a bot.
     # - [skip tests] is in the latest commit message.
-    if: '!endsWith(github.actor, ''[bot]'') && !contains(github.event.head_commit.message, ''[skip tests]'')'
+    # - triggered for a PR event where the PR is in the same repo (favor the
+    #   corresponding branch workflow run instead).
+    if: |
+      !endsWith(github.actor, '[bot]')
+      && !contains(github.event.head_commit.message, '[skip tests]')
+      && !cancelled()
+      && needs.head_commit.result != 'failure'
+      && !contains(needs.head_commit.outputs.message, '[skip tests]')
+      && github.repository != github.event.pull_request.head.repo.full_name
     steps:
       - uses: actions/checkout@v2
       - uses: projectcosmic/gh-actions/.github/actions/setup-composer-install@2.x
@@ -47,14 +77,21 @@ jobs:
   assets:
     name: Build Assets
     runs-on: ubuntu-18.04
+    needs: head_commit
     # Skip when:
     # - Asset build workflow configuration is false
     # - triggered by a bot and not an NPM or Yarn dependabot pull request.
+    # - triggered by a human for a PR event where the PR is in the same repo
+    #   (favor the corresponding branch workflow run instead).
     # - [skip assets] is in the latest commit message.
     if: |
       inputs.assets
       && (!endsWith(github.actor, '[bot]') || startsWith(github.head_ref, 'dependabot/npm_and_yarn/'))
+      && (endsWith(github.actor, '[bot]') || github.repository != github.event.pull_request.head.repo.full_name)
       && !contains(github.event.head_commit.message, '[skip assets]')
+      && !cancelled()
+      && needs.head_commit.result != 'failure'
+      && !contains(needs.head_commit.outputs.message, '[skip assets]')
     steps:
       - uses: actions/checkout@v2
       - id: version
