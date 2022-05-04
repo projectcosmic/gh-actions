@@ -7,6 +7,10 @@ adheres to [Semantic Versioning][semver].
 
 ## [Unreleased]
 
+## [2.2.2] - 2022-05-04
+### Fixed
+- Avoid duplicate runs on human PRs
+
 ## [2.2.1] - 2022-04-23
 ### Fixed
 - Fix action version references
@@ -65,6 +69,8 @@ adheres to [Semantic Versioning][semver].
 - Add WordPress Theme CI/CD reusable workflow
 
 [Unreleased]: https://github.com/projectcosmic/gh-actions/compare/v2.2.0...2.x
+[2.2.2]: https://github.com/projectcosmic/gh-actions/compare/v2.2.1...v2.2.2
+[2.2.1]: https://github.com/projectcosmic/gh-actions/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/projectcosmic/gh-actions/compare/v2.1.6...v2.2.0
 [2.1.6]: https://github.com/projectcosmic/gh-actions/compare/v2.1.5...v2.1.6
 [2.1.5]: https://github.com/projectcosmic/gh-actions/compare/v2.1.4...v2.1.5
