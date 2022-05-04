@@ -69,7 +69,7 @@ jobs:
       && github.repository != github.event.pull_request.head.repo.full_name
     steps:
       - uses: actions/checkout@v2
-      - uses: projectcosmic/gh-actions/.github/actions/setup-composer-install@v2.2.2
+      - uses: projectcosmic/gh-actions/.github/actions/setup-composer-install@2.x
         with:
           cache_key_prefix: ${{ inputs.composer_cache_key_prefix }}
           php_version: ${{ inputs.php_version }}
